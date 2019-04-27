@@ -1,0 +1,123 @@
+openapi: 3.0.0
+info:
+  title: Airline API
+  description: |
+    An airline flight searching & booking API
+    with the limited functionality in that it can
+    only search discounts
+  version: 0.0.1
+servers:
+  - url: http://api.example.com/v1
+    description: Optional server description, e.g. Main (production) server
+paths:
+  /booking/flights:
+    get:
+      summary: cursory search for flight discounts from an origin
+      parameters:
+        - origin: iata_code
+          in: query
+          required: true
+          description: Location of flight origin
+          schema:
+            type : string
+            maxlength: 3
+          example: PHL
+        - destination: iata_code
+          in: query
+          required: false
+          description: Location of flight destination
+          schema:
+            type : string
+            maxlength: 3
+          example: LAX
+        - date: dep_date
+          in: query
+          required: false
+          description: The data of departure
+          schema:
+            type: string
+            format: date
+          example: 2019-01-01
+
+      responses:
+        '200':    # status code
+          description: A JSON array of flights and discounts
+          content:
+            application/json:
+              schemas: 
+                ArrayOfFlights:
+                  type: array
+                  properties:
+                    date:
+                      type: string
+                    discount:
+                      type: number
+                example:
+                  - date: 2019-04-01
+                    discount: 234.12
+                  - date: 2019-03-17
+                    discount: 98.76
+        '400':
+          description: Invalid input
+                  
+                
+    get:
+      summary: Search for flight discount for defined trips
+      parameters:
+        - origin: 
+          in: query
+          required: true
+          description: IATA code for location of flight origin
+          schema:
+            type : string
+            maxlength: 3
+          example: PHL
+        - destination: 
+          in: query
+          required: false
+          description: IATA code for destination
+          schema:
+            type : string
+            maxlength: 3
+          example: LAX
+        - date: dep_date
+          in: query
+          required: false
+          description: The data of departure
+          schema:
+            type: string
+            format: date
+          example: 2019-01-01
+        - sort:
+          in: query
+          required: true
+          description: Sort order
+          schema:
+            type: string
+            enum: [default, price_asc, length]
+        
+      responses:
+        '200':    # status code
+          description: A JSON array of flights and discounts
+          content:
+            application/json:
+              schemas: 
+                ArrayOfFlights:
+                  type: array
+                  properties:
+                    flight:
+                      type: string
+                    date:
+                      type: string
+                    stops:
+                      type: array
+                    discount:
+                      type: number
+                example:
+                  - flight: 5cc4a5c7a7019c891c1afcf0
+                    date: 2019-03-17
+                    stops: ["BOS", "ORD", "LAX"]
+                    discount: 98.76
+        '400':
+          description: Invalid input
+ 
